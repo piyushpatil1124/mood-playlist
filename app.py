@@ -1,6 +1,5 @@
 
-from flask import Flask, render_template,
-render_template_string, request
+from flask import Flask, render_template,render_template_string, request
 import sys, os, random
 from datetime import datetime
 sys.path.insert(0, os.path.dirname(__file__))
