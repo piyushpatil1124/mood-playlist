@@ -1,6 +1,4 @@
 from flask import Flask, render_template, request
-from googleapiclient.discovery import build
-
 app = Flask(__name__)
 
 API_KEY = "AIzaSyCjPs24D5SGfq_Nx54bwsvogGynKcDBR7Y"
