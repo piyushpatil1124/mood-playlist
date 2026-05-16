@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Playlist Finder</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .mood-btn {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 12px 8px;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+        }
+        .mood-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-3px);
+        }
+        .mood-btn.selected {
+            background: #e94560;
+            border-color: #e94560;
+        }
+        .mood-btn .emoji { font-size: 1.5rem; display: block; }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        input[type="text"]::placeholder { color: #aaa; }
+        button[type="submit"] {
+            padding: 14px 28px;
+            background: #e94560;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button[type="submit"]:hover { background: #c73652; transform: translateY(-2px); }
+        .message {
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid #e94560;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        .dont-worry {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #e94560;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .playlist-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        .playlist-card:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(5px);
+        }
+        .playlist-info h3 { font-size: 1rem; margin-bottom: 4px; }
+        .playlist-info p { font-size: 0.8rem; color: #aaa; }
+        .open-btn {
+            background: #e94560;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        .open-btn:hover { background: #c73652; }
+        .error {
+            background: rgba(233,69,96,0.2);
+            border: 1px solid #e94560;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🎧 Mood Playlist Finder</h1>
+    <p class="subtitle">How are you feeling today?</p>
+
+    <!-- Mood buttons -->
+    <div class="mood-grid">
+        {% for mood, emoji in mood_emojis.items() %}
+        <div class="mood-btn" onclick="selectMood('{{ mood }}')">
+            <span class="emoji">{{ emoji }}</span>
+            {{ mood }}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Search form -->
+    <form method="POST">
+        <div class="search-box">
+            <input type="text" name="mood" id="moodInput"
+                   placeholder="Type or click your mood..."
+                   value="{{ mood if mood else '' }}">
+            <button type="submit">🔍 Find</button>
+        </div>
+    </form>
+
+    <!-- Error -->
+    {% if error %}
+    <div class="error">❌ {{ error }}</div>
+    {% endif %}
+
+    <!-- Positive message -->
+    {% if message %}
+    <div class="message">{{ message }}</div>
+    <div class="dont-worry">🎵 Don't worry, listen to these songs...</div>
+    {% endif %}
+
+    <!-- Playlists -->
+    {% for item in playlists %}
+    <div class="playlist-card">
+        <div class="playlist-info">
+            <h3>{{ item.snippet.title }}</h3>
+            <p>{{ item.snippet.channelTitle }}</p>
+        </div>
+        <a href="https://www.youtube.com/playlist?list={{ item.id.playlistId }}"
+           target="_blank" class="open-btn">▶ Open</a>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+function selectMood(mood) {
+    document.getElementById('moodInput').value = mood;
+    document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected'));
+    event.target.closest('.mood-btn').classList.add('selected');
+}
+</script>
+</body>
+</html>
