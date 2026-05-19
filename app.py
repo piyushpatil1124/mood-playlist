@@ -83,6 +83,18 @@ def index():
                            error=error,
                            mood_keywords=MOOD_KEYWORDS,
                            mood_emojis=MOOD_EMOJIS)
+    @app.route("/surprise")
+def surprise():
+    mood = random.choice(list(MOOD_KEYWORDS.keys()))
+    message = MOOD_MESSAGES[mood]
+    playlists = search_playlists(mood)
+    return render_template("index.html",
+                           playlists=playlists,
+                           mood=mood,
+                           message=message,
+                           error=None,
+                           mood_keywords=MOOD_KEYWORDS,
+                           mood_emojis=MOOD_EMOJIS)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
