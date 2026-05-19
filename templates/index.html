@@ -65,6 +65,20 @@
             display: block;
             margin-bottom: 4px;
         }
+        .surprise-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+        .surprise-btn:hover { opacity: 0.9; transform: scale(1.02); }
         .search-box {
             display: flex;
             gap: 10px;
@@ -120,9 +134,7 @@
             gap: 10px;
             transition: all 0.3s;
         }
-        .playlist-card:hover {
-            background: rgba(255,255,255,0.15);
-        }
+        .playlist-card:hover { background: rgba(255,255,255,0.15); }
         .playlist-info { flex: 1; min-width: 0; }
         .playlist-info h3 {
             font-size: 0.95rem;
@@ -131,10 +143,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .playlist-info p {
-            font-size: 0.78rem;
-            color: #aaa;
-        }
+        .playlist-info p { font-size: 0.78rem; color: #aaa; }
         .open-btn {
             background: #e94560;
             color: white;
@@ -156,8 +165,6 @@
             text-align: center;
             font-size: 0.9rem;
         }
-
-        /* MOBILE FIXES */
         @media (max-width: 480px) {
             body { padding: 12px; }
             .container { padding: 20px 14px; border-radius: 16px; }
@@ -183,6 +190,8 @@
         {% endfor %}
     </div>
 
+    <a href="/surprise" class="surprise-btn">🎲 Surprise Me!</a>
+
     <form method="POST">
         <div class="search-box">
             <input type="text" name="mood" id="moodInput"
@@ -198,27 +207,4 @@
 
     {% if message %}
     <div class="message">{{ message }}</div>
-    <div class="dont-worry">🎵 Don't worry, listen to these songs...</div>
-    {% endif %}
-
-    {% for item in playlists %}
-    <div class="playlist-card">
-        <div class="playlist-info">
-            <h3>{{ item.snippet.title }}</h3>
-            <p>{{ item.snippet.channelTitle }}</p>
-        </div>
-        <a href="https://www.youtube.com/playlist?list={{ item.id.playlistId }}"
-           target="_blank" class="open-btn">▶ Open</a>
-    </div>
-    {% endfor %}
-</div>
-
-<script>
-function selectMood(mood) {
-    document.getElementById('moodInput').value = mood;
-    document.querySelectorAll('.mood-btn').forEach(btn => btn.classList.remove('selected'));
-    event.target.closest('.mood-btn').classList.add('selected');
-}
-</script>
-</body>
-</html>
+    <div class="dont-worry">🎵 Don't worry, lis
