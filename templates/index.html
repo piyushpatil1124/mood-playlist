@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mood Playlist Finder</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -10,47 +10,47 @@
             font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            padding: 20px;
         }
         .container {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 24px 20px;
-            width: 100%;
+            padding: 40px;
+            width: 90%;
             max-width: 700px;
-            margin: 0 auto;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
         h1 {
             text-align: center;
-            font-size: 1.6rem;
-            margin-bottom: 8px;
+            font-size: 2rem;
+            margin-bottom: 10px;
             color: #fff;
         }
         p.subtitle {
             text-align: center;
             color: #ccc;
-            margin-bottom: 24px;
-            font-size: 0.95rem;
+            margin-bottom: 30px;
         }
         .mood-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 25px;
         }
         .mood-btn {
             background: rgba(255,255,255,0.1);
             border: 2px solid rgba(255,255,255,0.2);
             border-radius: 12px;
-            padding: 10px 6px;
+            padding: 12px 8px;
             color: white;
             cursor: pointer;
             text-align: center;
             transition: all 0.3s;
-            font-size: 0.78rem;
+            font-size: 0.85rem;
         }
         .mood-btn:hover {
             background: rgba(255,255,255,0.25);
@@ -60,11 +60,7 @@
             background: #e94560;
             border-color: #e94560;
         }
-        .mood-btn .emoji {
-            font-size: 1.4rem;
-            display: block;
-            margin-bottom: 4px;
-        }
+        .mood-btn .emoji { font-size: 1.5rem; display: block; }
         .search-box {
             display: flex;
             gap: 10px;
@@ -72,18 +68,17 @@
         }
         input[type="text"] {
             flex: 1;
-            padding: 12px 16px;
+            padding: 14px 20px;
             border-radius: 12px;
             border: 2px solid rgba(255,255,255,0.2);
             background: rgba(255,255,255,0.1);
             color: white;
             font-size: 1rem;
             outline: none;
-            min-width: 0;
         }
         input[type="text"]::placeholder { color: #aaa; }
         button[type="submit"] {
-            padding: 12px 20px;
+            padding: 14px 28px;
             background: #e94560;
             color: white;
             border: none;
@@ -91,81 +86,56 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
-            white-space: nowrap;
         }
-        button[type="submit"]:hover { background: #c73652; }
+        button[type="submit"]:hover { background: #c73652; transform: translateY(-2px); }
         .message {
             background: rgba(255,255,255,0.1);
             border-left: 4px solid #e94560;
-            padding: 14px 16px;
+            padding: 15px 20px;
             border-radius: 10px;
-            margin-bottom: 16px;
-            font-size: 0.95rem;
+            margin-bottom: 20px;
+            font-size: 1rem;
         }
         .dont-worry {
             text-align: center;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #e94560;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             font-weight: bold;
         }
         .playlist-card {
             background: rgba(255,255,255,0.08);
             border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 10px;
             transition: all 0.3s;
         }
         .playlist-card:hover {
             background: rgba(255,255,255,0.15);
+            transform: translateX(5px);
         }
-        .playlist-info { flex: 1; min-width: 0; }
-        .playlist-info h3 {
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .playlist-info p {
-            font-size: 0.78rem;
-            color: #aaa;
-        }
+        .playlist-info h3 { font-size: 1rem; margin-bottom: 4px; }
+        .playlist-info p { font-size: 0.8rem; color: #aaa; }
         .open-btn {
             background: #e94560;
             color: white;
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: 8px;
             text-decoration: none;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             transition: all 0.3s;
-            white-space: nowrap;
-            flex-shrink: 0;
         }
         .open-btn:hover { background: #c73652; }
         .error {
             background: rgba(233,69,96,0.2);
             border: 1px solid #e94560;
-            padding: 12px 16px;
+            padding: 12px 20px;
             border-radius: 10px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             text-align: center;
-            font-size: 0.9rem;
-        }
-
-        /* MOBILE FIXES */
-        @media (max-width: 480px) {
-            body { padding: 12px; }
-            .container { padding: 20px 14px; border-radius: 16px; }
-            h1 { font-size: 1.3rem; }
-            .mood-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .mood-btn { padding: 10px 4px; font-size: 0.72rem; }
-            .mood-btn .emoji { font-size: 1.2rem; }
-            button[type="submit"] { padding: 12px 14px; font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -174,6 +144,7 @@
     <h1>🎧 Mood Playlist Finder</h1>
     <p class="subtitle">How are you feeling today?</p>
 
+    <!-- Mood buttons -->
     <div class="mood-grid">
         {% for mood, emoji in mood_emojis.items() %}
         <div class="mood-btn" onclick="selectMood('{{ mood }}')">
@@ -183,6 +154,7 @@
         {% endfor %}
     </div>
 
+    <!-- Search form -->
     <form method="POST">
         <div class="search-box">
             <input type="text" name="mood" id="moodInput"
@@ -192,15 +164,18 @@
         </div>
     </form>
 
+    <!-- Error -->
     {% if error %}
     <div class="error">❌ {{ error }}</div>
     {% endif %}
 
+    <!-- Positive message -->
     {% if message %}
     <div class="message">{{ message }}</div>
     <div class="dont-worry">🎵 Don't worry, listen to these songs...</div>
     {% endif %}
 
+    <!-- Playlists -->
     {% for item in playlists %}
     <div class="playlist-card">
         <div class="playlist-info">
