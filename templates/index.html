@@ -45,6 +45,30 @@
         .mood-btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-3px); }
         .mood-btn.selected { background: #e94560; border-color: #e94560; }
         .mood-btn .emoji { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+        .language-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.1); }
+        .lang-btn input[type="radio"] { accent-color: #e94560; }
         .surprise-btn {
             display: block;
             text-align: center;
@@ -137,6 +161,8 @@
             .mood-btn { padding: 10px 4px; font-size: 0.72rem; }
             .mood-btn .emoji { font-size: 1.2rem; }
             button[type="submit"] { padding: 12px 14px; font-size: 0.9rem; }
+            .language-filter { gap: 8px; padding: 10px 12px; }
+            .lang-btn { padding: 5px 10px; font-size: 0.78rem; }
         }
     </style>
 </head>
@@ -154,9 +180,28 @@
         {% endfor %}
     </div>
 
+    <div class="language-filter">
+        <span>🌍 Language:</span>
+        <label class="lang-btn">
+            <input type="radio" name="language" value="english"
+                   {% if language == 'english' %}checked{% endif %}
+                   form="moodForm"> 🇬🇧 English
+        </label>
+        <label class="lang-btn">
+            <input type="radio" name="language" value="hindi"
+                   {% if language == 'hindi' %}checked{% endif %}
+                   form="moodForm"> 🇮🇳 Hindi
+        </label>
+        <label class="lang-btn">
+            <input type="radio" name="language" value="both"
+                   {% if language == 'both' %}checked{% endif %}
+                   form="moodForm"> 🌐 Both
+        </label>
+    </div>
+
     <a href="/surprise" class="surprise-btn">🎲 Surprise Me!</a>
 
-    <form method="POST">
+    <form method="POST" id="moodForm">
         <div class="search-box">
             <input type="text" name="mood" id="moodInput"
                    placeholder="Type or click your mood..."
