@@ -51,13 +51,19 @@ MOOD_EMOJIS = {
     "heartbreak": "💔",
 }
 
-def search_playlists(mood):
+def search_playlists(mood, language="english"):
     youtube = build("youtube", "v3", developerKey=API_KEY)
+    if language == "hindi":
+        query = MOOD_KEYWORDS[mood] + " hindi songs"
+    elif language == "both":
+        query = MOOD_KEYWORDS[mood] + " hindi english songs"
+    else:
+        query = MOOD_KEYWORDS[mood]
     req = youtube.search().list(
         part="snippet",
-        q=MOOD_KEYWORDS[mood],
+        q=query,
         type="playlist",
-        maxResults=5
+        maxResults=6
     )
     response = req.execute()
     return response.get("items", [])
@@ -68,20 +74,23 @@ def index():
     mood = None
     message = None
     error = None
+    language = "english"
     if request.method == "POST":
         mood = request.form.get("mood").strip().lower()
+        language = request.form.get("language", "english")
         if mood not in MOOD_KEYWORDS:
             error = f"'{mood}' is not a recognized mood!"
         else:
             message = MOOD_MESSAGES[mood]
-            playlists = search_playlists(mood)
+            playlists = search_playlists(mood, language)
     return render_template("index.html",
                            playlists=playlists,
                            mood=mood,
                            message=message,
                            error=error,
                            mood_keywords=MOOD_KEYWORDS,
-                           mood_emojis=MOOD_EMOJIS)
+                           mood_emojis=MOOD_EMOJIS,
+                           language=language)
 
 @app.route("/surprise")
 def surprise():
@@ -94,7 +103,8 @@ def surprise():
                            message=message,
                            error=None,
                            mood_keywords=MOOD_KEYWORDS,
-                           mood_emojis=MOOD_EMOJIS)
+                           mood_emojis=MOOD_EMOJIS,
+                           language="english")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
